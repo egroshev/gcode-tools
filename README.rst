@@ -37,14 +37,14 @@ Install NumPy using pip:
 Usage
 =====
 
-Run the script directly from the command line, piping the output (``>``) to a new G-Code file. All transformation parameters are **optional** and default to zero (0).
+Run the script using the ``python3`` interpreter, piping the output (``>``) to a new G-Code file. All transformation parameters are **optional** and default to zero (0).
 
 Basic Syntax
 ------------
 
 ::
 
-    ./gcode-transform.py [OPTIONS] input.gcode > output.gcode
+    python3 gcode-transform.py [OPTIONS] input.gcode > output.gcode
 
 Basic Example
 -------------
@@ -53,7 +53,7 @@ This command rotates the ``input.gcode`` file **90 degrees clockwise** around th
 
 ::
 
-    ./gcode-transform.py --rotate 90 input.gcode > output.gcode
+    python3 gcode-transform.py --rotate 90 input.gcode > output.gcode
 
 ***
 
@@ -92,7 +92,7 @@ This command applies a **4° counter-clockwise rotation** (``-4``) and shifts th
 
 ::
 
-    ./gcode-transform.py --rotate -4 --shiftx -5 --shifty 10 --center 110x110 input.gcode > transformed.gcode
+    python3 gcode-transform.py --rotate -4 --shiftx -5 --shifty 10 --center 110x110 input.gcode > transformed.gcode
 
 Shift-Only Example
 ------------------
@@ -101,4 +101,4 @@ If rotation is omitted, only the translation (shifting) occurs.
 
 ::
 
-    ./gcode-transform.py --shiftx 5 --shifty -2.5 input.gcode > shifted_only.gcode
+    python3 gcode-transform.py --shiftx 5 --shifty -2.5 input.gcode > shifted_only.gcode
