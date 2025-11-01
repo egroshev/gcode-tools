@@ -1,31 +1,104 @@
-G-Code Tools
-============
+===================================================
+G-Code Transformation Tool (gcode-transform.py)
+===================================================
 
-Tools for low-level manipulation of G-Code files. Currently includes:
+This Python 3 script provides a robust, low-level tool for performing geometric
+transformations—specifically **rotation (along the Z-axis)** and **translation (X/Y shifting)**—on pre-sliced G-Code files.
 
-- ``gcode-transform.py``: transform G-Code coordinates, allowing
-  translation and rotation along Z of a pre-sliced file.
+It uses NumPy for matrix mathematics to correctly handle **rotation around an arbitrary center point** and precisely tracks G-Code state (Absolute ``G90``/Relative ``G91`` modes) for reliable output.
 
-Python 3 and Numpy are required. On a Debian/Ubuntu system, run::
+***
 
-  sudo apt-get install python3 python3-numpy
+Dependencies and Installation
+=============================
 
-to install the required dependencies, then run the command with
-``--help`` for a brief introduction. Usage should be self-explanatory::
+The script requires **Python 3** and the scientific computing library **NumPy**.
 
-  ./gcode-transform.py --rotate 90 input.gcode > output.gcode
+Debian/Ubuntu Systems
+---------------------
 
-Will rotate ``input.gcode`` 90 degrees along Z over the center 125x100
-(bed center on Prusa i3 printers) and write the results to
-``output.gcode``.
+Install the required dependencies by running:
 
+::
 
-Authors and Copyright
-=====================
+    sudo apt-get install python3 python3-numpy
 
-| Copyright(c) 2021 by wave++ "Yuri D'Elia" <wavexx@thregr.org>
-| Distributed under the GNU GPLv3+ license, WITHOUT ANY WARRANTY.
+Other Systems (using pip)
+-------------------------
 
-``gcode-tools``'s GIT repository is publicly accessible at:
+Install NumPy using pip:
 
-https://github.com/wavexx/gcode-tools
+::
+
+    pip install numpy
+
+***
+
+Usage
+=====
+
+Run the script directly from the command line, piping the output (``>``) to a new G-Code file. All transformation parameters are **optional** and default to zero (0).
+
+Basic Syntax
+------------
+
+::
+
+    ./gcode-transform.py [OPTIONS] input.gcode > output.gcode
+
+Basic Example
+-------------
+
+This command rotates the ``input.gcode`` file **90 degrees clockwise** around the default center point (``125x100``) and saves the result to ``output.gcode``.
+
+::
+
+    ./gcode-transform.py --rotate 90 input.gcode > output.gcode
+
+***
+
+Parameters and Defaults
+=======================
+
+The table below outlines the interpretation for positive and negative values.
+
+.. list-table::
+   :widths: 15 15 70
+   :header-rows: 1
+
+   * - Parameter
+     - Value / Default
+     - Interpretation & Effect
+   * - ``--shiftx``
+     - ``5`` / **Default: 0.0**
+     - Shifts in the **Positive X** (Right) / **Negative X** (Left) direction.
+   * - ``--shifty``
+     - ``5`` / **Default: 0.0**
+     - Shifts in the **Positive Y** (Forward) / **Negative Y** (Backward) direction.
+   * - ``--rotate``
+     - ``4`` / **Default: 0.0**
+     - Rotation in the **Clockwise (CW)** / **Counter-Clockwise (CCW)** direction.
+   * - ``--center``
+     - ``XxY`` (e.g., ``110x110``) / **Default: 125x100**
+     - Specifies the coordinate point around which rotation occurs. The default is suitable for Prusa i3-style 250x200 mm beds.
+   * - ``--precision``
+     - Integer (e.g., ``3``) / **Default: 3**
+     - Sets the decimal places for output coordinates.
+
+Full Transformation Example
+---------------------------
+
+This command applies a **4° counter-clockwise rotation** (``-4``) and shifts the print **5 mm to the left** (``-5``) and **10 mm forward** (``10``).
+
+::
+
+    ./gcode-transform.py --rotate -4 --shiftx -5 --shifty 10 --center 110x110 input.gcode > transformed.gcode
+
+Shift-Only Example
+------------------
+
+If rotation is omitted, only the translation (shifting) occurs.
+
+::
+
+    ./gcode-transform.py --shiftx 5 --shifty -2.5 input.gcode > shifted_only.gcode
